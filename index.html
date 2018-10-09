@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fetch</title>
+    <style>
+        #gallery{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            grid-auto-rows: 80px;
+            grid-auto-flow: dense
+        }
+    </style>
+</head>
+<body>
+
+<button id="addDog">Add Dog</button>
+
+<button id="reverseDogs">Reverse Dogs</button>
+
+<div id="gallery"></div>
+
+<script>
+    const dogs = [];
+
+    function fetchDog() {
+      fetch('https://dog.ceo/api/breeds/image/random')
+        .then(response => response.json())
+        .then(data => {
+          dogs.push({ retrieved: new Date(), src: data.message});
+          displayDogs(dogs);
+        });
+    }
+
+    function displayDogs(dogs) {
+      const gallery = document.getElementById("gallery");
+      while(gallery.firstChild){
+        gallery.removeChild(gallery.firstChild);
+      }
+      dogs.map(dog => {
+        const img = document.createElement("img");
+        img.src = dog.src;
+        gallery.appendChild(img);
+      });
+    }
+
+    const btn = document.getElementById("addDog");
+    btn.addEventListener('click', fetchDog);
+
+    document.getElementById("reverseDogs").addEventListener('click', e => {
+      const reversedDogs = dogs.reverse();
+      displayDogs(reversedDogs);
+    })
+
+</script>
+</body>
+</html>
